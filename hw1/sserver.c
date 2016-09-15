@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 	if (3 != argc)
 	{
 		printf("\nInvalid arguments!!!");
-		printf("\nUsage: <executable> <IP address> <Port number>\n");
+		printf("\nUsage: <executable> -p <Port number>\n");
 		return (1);
 	}
 
