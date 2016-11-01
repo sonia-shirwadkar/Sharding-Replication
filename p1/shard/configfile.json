@@ -1,0 +1,9 @@
+{
+	"homedir" : ".",
+	"listenport" : "20115",
+	"metadatafile" : "metadata.json",
+	"shard1ip" : "program.cs.uh.edu",
+	"shard1port" : "20116",
+	"shard2ip" : "program.cs.uh.edu",
+	"shard2port" : "20117"
+}

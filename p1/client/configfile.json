@@ -1,0 +1,10 @@
+{
+	"homedir" : ".",
+	"metadatafile" : "metadata",
+	"shard1ip" : "program.cs.uh.edu",
+	"shard1port" : "20115",
+	"shard2ip" : "program.cs.uh.edu",
+	"shard2port" : "20116",
+	"shard3ip" : "program.cs.uh.edu",
+	"shard3port" : "20117"
+}
