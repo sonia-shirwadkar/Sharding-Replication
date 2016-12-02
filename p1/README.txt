@@ -1,10 +1,10 @@
 COSC 6377 Project milestone1 submission                Sonia Shirwadkar
 Request for Comments: 01							   PS ID: 1430858
 Category: Informational							   	   Contact: sshirwadkar@uh.edu
-													   Oct 30 2016
+													   Dec 1  2016
 
 
-                  Project milestone 1
+                  Final Project
 
 Status of this Memo
 
@@ -44,3 +44,6 @@ HOW TO RUN THE CODE
 The folder p1 has 2 modules. The client and the shard module. Copy the modules onto the machine where you want to run.
 To run the client and shard modules, use the makefiles provided.
 For now the makefile for the client has parameters setup to upload files. To download change the -u flag to -d and change the filename.
+To run the monitor module, using 'python monitor.py -c configfile.json' will start the monitor.
+For now the monitor is configured to run properly only when all 3 shards are up.
+Regressive testing of monitor has not been done and the monitor may throw exceptions if any shard is down.

@@ -58,7 +58,7 @@ def deleteCapacityField(metadatafile):
 	except:
 		raise
 
-def getCapacityField(metadatafile):
+def getCapacity(metadatafile):
 	try:
 		capacity = 0
 		if (os.path.isfile(metadatafile)):
@@ -74,7 +74,7 @@ def getCapacityField(metadatafile):
 		raise
 	return capacity
 
-def addCapacityField(metadatafile, newCapacity):
+def setCapacity(metadatafile, newCapacity):
 	try:
 		deleteCapacityField(metadatafile)
 		fp = open(metadatafile, 'ab')
@@ -86,8 +86,8 @@ def addCapacityField(metadatafile, newCapacity):
 
 def addToShardCapacity(metadatafile, newCapacity):
 	try:
-		newCapacity += getCapacityField(metadatafile)
-		addCapacityField(metadatafile, newCapacity)
+		newCapacity += getCapacity(metadatafile)
+		setCapacity(metadatafile, newCapacity)
 	except:
 		raise
 

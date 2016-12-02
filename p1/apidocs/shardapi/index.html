@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Shard - MyCloud</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Shard";
+    var mkdocs_page_input_path = "shardapi.md";
+    var mkdocs_page_url = "/shardapi/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> MyCloud</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Introduction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Shard</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#shard">Shard</a></li>
+                
+                    <li><a class="toctree-l4" href="#replication">Replication</a></li>
+                
+                    <li><a class="toctree-l4" href="#system-components">System Components</a></li>
+                
+                    <li><a class="toctree-l4" href="#api-documentation">API Documentation</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../client/">Client</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../monitor/">Monitor</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">MyCloud</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Shard</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="shard">Shard</h1>
+<p>The shard is responsible for storing the files. To simplify this project, we will have shards also be the backups and develop the system so that it can tolerate the failure of one shard. Further, the system will support exactly three shards but the IP address and ports should not be hard coded in your code. Each shard connects to the other two shards, shard1 and shard2.
+The shards, when they receive an upload file, they split the file into two equal parts and upload the "backup" to the other two shards. Thus each upload chunk is tagged as primary or backup on the shard. When calculating the total storage used on a shard, it reports the total of primary and backup storage.
+The shard listens to the incoming connections from the clients. It also connects to the other shards in the network. It keeps a metadata of all the uploaded files and replicated files as backup.</p>
+<h2 id="replication">Replication</h2>
+<p>In many distributed systems, such as storage systems in the cloud, the same data is copied to multiple servers in multiple geographical locations. Such copies of data are called replicas. Replicas are used to provide redundancy and reliability to storage system, i.e., if one copy of the data is lost, we still have another copy. In our project, we will replicate the data stored in the shards so that the system can survive the crash of one shard.
+In this project, we will have each shard split the data it receives for storage into two pieces and copy them to the remaining two servers. That way, if a shard crashes, we have a copy of the data on the two remaining servers. The system will not be able to recover if more than one shard crashes.</p>
+<h2 id="system-components">System Components</h2>
+<p>The shards are configured at start-up using a configuration file. Also, the shards store all metadata related to uploaded data in the metadata file.
+The description and structure ofboth these files is presented below.</p>
+<h3 id="configuration-file">Configuration file</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">homedir</td>
+<td align="left">Home directory for the shard and client. Each client and shard has a different home directory</td>
+</tr>
+<tr>
+<td align="left">listenport</td>
+<td align="left">Port at which this shard should listen for incoming connections</td>
+</tr>
+<tr>
+<td align="left">metadatafile</td>
+<td align="left">The file that stores the metadata corresponding to the files and replicates stored by the shard</td>
+</tr>
+<tr>
+<td align="left">shard1ip</td>
+<td align="left">IP address of shard 1</td>
+</tr>
+<tr>
+<td align="left">shard1port</td>
+<td align="left">Port of shard 1</td>
+</tr>
+<tr>
+<td align="left">shard2ip</td>
+<td align="left">IP address of shard 2</td>
+</tr>
+<tr>
+<td align="left">shard2port</td>
+<td align="left">Port of shard 2</td>
+</tr>
+</tbody>
+</table>
+<h3 id="metadata">Metadata</h3>
+<p>The home directory for the shard contains a metadata file specified in the configuration file. The metadata has information about the primary and backup data stored by the shard. This file is JSON format and contains the following fields:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Filename</td>
+<td align="left">Name of the file for which metadata is stored</td>
+</tr>
+<tr>
+<td align="left">BytesFrom1</td>
+<td align="left">Start index of primary data block</td>
+</tr>
+<tr>
+<td align="left">BytesTo1</td>
+<td align="left">End index of primary data block</td>
+</tr>
+<tr>
+<td align="left">Filename2</td>
+<td align="left">Name of the file for first backup block received from other shards</td>
+</tr>
+<tr>
+<td align="left">BytesFrom2</td>
+<td align="left">Start index of first backup data block</td>
+</tr>
+<tr>
+<td align="left">BytesTo2</td>
+<td align="left">End index of first backup data block</td>
+</tr>
+<tr>
+<td align="left">Filename3</td>
+<td align="left">Name of the file for second backup block received from other shards</td>
+</tr>
+<tr>
+<td align="left">BytesFrom3</td>
+<td align="left">Start index of second backup data block</td>
+</tr>
+<tr>
+<td align="left">BytesTo3</td>
+<td align="left">End index of second backup data block</td>
+</tr>
+</tbody>
+</table>
+<h2 id="api-documentation">API Documentation</h2>
+<hr />
+<p>The entire module has been developed using Python. The shard functionality is implemented using two classes</p>
+<ul>
+<li>
+<p><strong>Shard: </strong>
+   This is the main class for the shard and is responsible for listening for incoming client requests</p>
+</li>
+<li>
+<p><strong>ServerThread: </strong>
+   This class is the main engine for the shard functionality. It derives from thread.Threading class. The Shard class creates an instance of this class
+   and passes all requests received from client to this instance. The ServerThread instance is then responsible for replying to all requests</p>
+</li>
+</ul>
+<p>The API documentation discussed below pertain to the ServerThread class unless otherwise mentioned</p>
+<hr />
+<h3 id="accepting-client-requests">Accepting client requests</h3>
+<p>This function is the main engine of the ServerThread class. This function is responsible for determining the type of client request received
+and taking action accordingly.</p>
+<pre><code>acceptClientRequests()
+</code></pre>
+
+<pre><code>Input parameters:
+    None
+
+Return:
+    None
+</code></pre>
+<p><em>Known Limitations: To parse the JSON message received, it is assumed that the message won't won't contain more than one '}'</em></p>
+<hr />
+<h3 id="sending-used-storage-capacity-to-the-client">Sending used storage capacity to the client</h3>
+<p>The client requests the shard for the current used storage capacity using the following message</p>
+<pre><code>{
+    MessageType: "BYTESTORED"
+    ByteStored: "&lt;value in bytes&gt;"
+}
+</code></pre>
+<p>sendShardCapacity() function is responsible for responding to the "BYTESTORED" JSON message. This function calculates reads the current used storage capacity from the
+metadata file and sends it to the client. It's signature is as follows:</p>
+<pre><code>sendShardCapacity()
+</code></pre>
+
+<pre><code>Input parameters:
+    None
+
+Return:
+    None
+</code></pre>
+<p><em>Known Limitations: Although testing for this function has been done for known use cases, it has not been tested rigorously for corner cases</em></p>
+<hr />
+<h3 id="sending-requested-file-information-to-the-client">Sending requested file information to the client</h3>
+<p>The client requests the shard for the current used storage capacity using the following message</p>
+<pre><code>{
+    MessageType: "FILEINFO"
+    Filename:
+    BytesFrom:
+    BytesTo:
+    BytesFrom2: "&lt;for copy from SHARD 2&gt;"
+    BytesTo2: "&lt;for copy from SHARD 2&gt;"
+    BytesFrom3: "&lt;for copy from SHARD 3&gt;"
+    BytesTo3: "&lt;for copy from SHARD 3&gt;"
+}
+</code></pre>
+<p>getFileInfo() function is responsible for responding to the "FILEINFO" JSON message. This function calculates reads the current used storage capacity from the
+metadata file and sends it to the client. It's signature is as follows:</p>
+<pre><code>getFileInfo(filename)
+</code></pre>
+
+<pre><code>Input parameters:
+    string filename: The file for which information is to be retreived
+
+Return:
+    None
+</code></pre>
+<p><em>Known Limitations: Although testing for this function has been done for known use cases, it has not been tested rigorously for corner cases</em></p>
+<hr />
+<h3 id="sending-requested-data-to-the-client">Sending requested data to the client</h3>
+<p>The client requests the shard for specific bytes of a file using the following message</p>
+<pre><code>{
+    MessageType: "REQUESTDATA"
+    Filename:
+    BytesFrom:     
+    ByteTo:
+}
+</code></pre>
+<p>sendFileData() function is responsible for responding to the "REQUESTDATA" JSON message. This function reads the requested bytes from the file, encodes the data into
+the following JSON message using Base64 encoding and sends it to the client.</p>
+<pre><code>{
+    MessageType: "DATA"
+    Filename:
+    BytesFrom:     
+    BytesTo:
+    Data:   
+}
+</code></pre>
+<p>The signature of the function is as follows:</p>
+<pre><code>sendFileData(req)
+</code></pre>
+
+<pre><code>Input parameters:
+    dict req: The message received, which contains all the required data for reading the file
+
+Return:
+    None
+</code></pre>
+<p><em>Known Limitations: Although testing for this function has been done for known use cases, it has not been tested rigorously for corner cases</em></p>
+<hr />
+<h3 id="receiving-uploaded-data-from-the-client">Receiving uploaded data from the client</h3>
+<p>The client uploads specific bytes of a file to the shard using the following message</p>
+<pre><code>{
+    MessageType: "DATA"
+    Filename:
+    BytesFrom:     
+    BytesTo:
+    Data:   
+}
+</code></pre>
+<p>saveFileUsingMetadata() function is responsible for storing the data at an appropriate location and also update the metadata accordingly. The signature of the function is as follows:</p>
+<pre><code>saveFileUsingMetadata(req)
+</code></pre>
+
+<pre><code>Input parameters:
+    dict req: The message received, which contains all the required data for reading the file
+
+Return:
+    None
+</code></pre>
+<p><em>Known Limitations: Although testing for this function has been done for known use cases, it has not been tested rigorously for corner cases</em></p>
+<hr />
+<h3 id="sending-backup-data-to-other-shards">Sending backup data to other shards</h3>
+<p>The shards exchange backup data using the following message</p>
+<pre><code>{
+    MessageType: "BACKUPDATA"
+    Filename:
+    BytesFrom:     
+    BytesTo:
+    Data:   
+}
+</code></pre>
+<p>When a shard receives backup data it saves the file and updates the metadata accordingly. receiveBackupData() function is responsible for doing this. The signature of the function is as follows:</p>
+<pre><code>receiveBackupData(req)
+</code></pre>
+
+<pre><code>Input parameters:
+    dict req: The message received, which contains all the required data for reading the file
+
+Return:
+    None
+</code></pre>
+<p><em>Known Limitations: Although testing for this function has been done for known use cases, it has not been tested rigorously for corner cases</em></p>
+<hr />
+<h3 id="sending-local-date-time-to-the-client">Sending local date-time to the client</h3>
+<p>This function has been implemented mostly for monitoring and debugging tools at the client side. When the shard receives the following message</p>
+<pre><code>{
+    MessageType: "TIMESTAMP"
+    Timestamp:
+}
+</code></pre>
+<p>It responds by sending the dat and time at the server end to the requesting client. sendDateTimeToClient() is the function responsible for this.</p>
+<pre><code>sendDateTimeToClient()
+</code></pre>
+
+<pre><code>Input parameters:
+    dict req: The message received, which contains all the required data for reading the file
+
+Return:
+    None
+</code></pre>
+<p><em>Known Limitations: Although testing for this function has been done for known use cases, it has not been tested rigorously for corner cases</em></p>
+<hr />
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../client/" class="btn btn-neutral float-right" title="Client">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Introduction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../client/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

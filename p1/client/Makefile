@@ -1,2 +1,2 @@
 all:
-	python client.py -c configfile.json -d image.jpg
+	python client.py -c configfile.json -u image.jpg

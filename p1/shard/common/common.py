@@ -31,21 +31,27 @@ class MessageType:
     MSG_DATA = 'DATA'
     MSG_FILEINFO = 'FILEINFO'
     MSG_REQUESTDATA = 'REQUESTDATA'
+    MSG_BACKUPDATA = 'BACKUPDATA'
+    MSG_METADATA = 'METADATA'
+    MSG_TIMESTAMP = 'TIMESTAMP'
 
-
+	
 class Keys:
-    MESSAGETYPE = 'Message-Type'
-    BYTESTORED = 'Byte-Stored'
+    MESSAGETYPE = 'MessageType'
+    BYTESTORED = 'BytesStored'
     FILENAME = 'Filename'
-    BYTESFROM = 'Bytes-From'
-    BYTESTO = 'Bytes-To'
-    BYTESFROM2 = 'Bytes-From2'
-    BYTESTO2 = 'Bytes-To2'
-    BYTESFROM3 = 'Bytes-From3'
-    BYTESTO3 = 'Bytes-To3'
+    FILENAME2 = 'Filename2'
+    FILENAME3 = 'Filename3'
+    BYTESFROM = 'BytesFrom'
+    BYTESTO = 'BytesTo'
+    BYTESFROM2 = 'BytesFrom2'
+    BYTESTO2 = 'BytesTo2'
+    BYTESFROM3 = 'BytesFrom3'
+    BYTESTO3 = 'BytesTo3'
     DATA = 'Data'
     SHARDCAPACITY = 'ShardCapacity'
-
+    FILESIZE = 'FileSize'
+    TIMESTAMP = ''
 
 class Messages:
     shardcapacity = {Keys.SHARDCAPACITY : 0}
@@ -63,5 +69,23 @@ class Messages:
         Keys.BYTESTO3 : 0
         }
     requestdata = {Keys.MESSAGETYPE : MessageType.MSG_REQUESTDATA, Keys.FILENAME : '', Keys.BYTESFROM : 0, Keys.BYTESTO : 0}
-
+    backupdata = {Keys.MESSAGETYPE : MessageType.MSG_BACKUPDATA, Keys.FILENAME : '', Keys.BYTESFROM: 0, Keys.BYTESTO: 0, Keys.DATA : 0}
+    metadata = {
+        Keys.MESSAGETYPE: MessageType.MSG_METADATA,
+        Keys.FILENAME: '',
+        Keys.FILESIZE: 0,
+        Keys.BYTESFROM: 0,
+        Keys.BYTESTO: 0,
+        Keys.FILENAME2: '',
+        Keys.BYTESFROM2: 0,
+        Keys.BYTESTO2: 0,
+        Keys.FILENAME3: '',
+        Keys.BYTESFROM3: 0,
+        Keys.BYTESTO3: 0
+    }
+    timestamp = {
+        Keys.MESSAGETYPE: MessageType.MSG_TIMESTAMP,
+        Keys.TIMESTAMP: ''
+    }
+	
 ##################################################################

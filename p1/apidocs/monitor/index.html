@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Monitor - MyCloud</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Monitor";
+    var mkdocs_page_input_path = "monitor.md";
+    var mkdocs_page_url = "/monitor/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> MyCloud</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Introduction</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../shardapi/">Shard</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../client/">Client</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Monitor</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#monitor">Monitor</a></li>
+                
+                    <li><a class="toctree-l4" href="#system-components">System Components</a></li>
+                
+                    <li><a class="toctree-l4" href="#api-documentation">API Documentation</a></li>
+                
+                    <li><a class="toctree-l4" href="#measurements">Measurements</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">MyCloud</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Monitor</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="monitor">Monitor</h1>
+<p>The monitor is a diagnostic utility and is responsible for collecting the used storage at each shard after every 10 seconds.</p>
+<h2 id="system-components">System Components</h2>
+<p>The monitor is configured at startup using the configuration file. The description and structure os this file is presented below.</p>
+<h3 id="configuration-file">Configuration file</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">homedir</td>
+<td align="left">Home directory for the shard and client. Each client and shard has a different home directory</td>
+</tr>
+<tr>
+<td align="left">metadatafile</td>
+<td align="left">The file that stores the metadata corresponding to the files and replicates stored by the shard</td>
+</tr>
+<tr>
+<td align="left">shard1ip</td>
+<td align="left">IP address of shard 1</td>
+</tr>
+<tr>
+<td align="left">shard1port</td>
+<td align="left">Port of shard 1</td>
+</tr>
+<tr>
+<td align="left">shard2ip</td>
+<td align="left">IP address of shard 2</td>
+</tr>
+<tr>
+<td align="left">shard2port</td>
+<td align="left">Port of shard 2</td>
+</tr>
+<tr>
+<td align="left">shard3ip</td>
+<td align="left">IP address of shard 3</td>
+</tr>
+<tr>
+<td align="left">shard3port</td>
+<td align="left">Port of shard 3</td>
+</tr>
+</tbody>
+</table>
+<h2 id="api-documentation">API Documentation</h2>
+<hr />
+<p>The entire module has been developed using Python. The monitor connects to the three shards usning the configuration file.
+Also the monitor uses the same API calls that the client uses.</p>
+<hr />
+<h2 id="measurements">Measurements</h2>
+<p>Initially the shards are configured with different storage using the shards metadata. The monitor notes down the storage amount returned by the shards in a CSV file.
+The graph of the measurements is given below.
+<img alt="" src="../img/monitor_results.png" /></p>
+<p>As seen above, we see that initially shard1 has used more storage capacity than the other shards. Over a period of time, the client keeps uploading a file of 10 KB to the shards.
+The storage capacity is still not balanced out  because backup data is being sent to shard 1. However, towards the end the client makes uploads of a few large files. It is at these points that we see the storage capacities slowly start to balance out.
+Thus, we can conclude that the load balancing algorithm is working as expected.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../client/" class="btn btn-neutral" title="Client"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../client/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

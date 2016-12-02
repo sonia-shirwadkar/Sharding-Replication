@@ -33,6 +33,7 @@ class Server(object):
         # TODO: REPLACE WITH socket.gethostname()
         #
         self.configFile = configFile
+        #self.ip = ServerConfigParser.getShard1IP(configFile)
         self.ip = socket.gethostname()
         self.port = int(ServerConfigParser.getListenPort(configFile))
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -63,8 +64,13 @@ if __name__ == '__main__':
     configFile = parseCommandLineArgs()
     server = Server(configFile)
     while True:
+      try:
         logger.info('*** waiting for requests ***\n')
         print ('*** waiting for requests ***\n')
         (client, addr) = server.accept_connection()
         threadObject = ServerThread(client, configFile)
         clientThread = threadObject.createNewRequestThread()
+      except KeyboardInterrupt:
+        port = int(ServerConfigParser.getListenPort(configFile))
+        temp = "fuser -k -n tcp " + str(port)
+        os.system(temp)
